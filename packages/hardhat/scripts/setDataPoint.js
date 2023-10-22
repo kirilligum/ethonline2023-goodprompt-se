@@ -24,9 +24,12 @@ async function main() {
 
   const setDataPointTx = await contract.setDataPoint("sample instruction and response");
 
-  await setDataPointTx.wait();
+  const receipt = await setDataPointTx.wait();
 
-  console.log("setDataPoint function executed");
+  console.log("setDataPoint function executed. Transaction details are:");
+  console.log(`  Transaction hash: ${receipt.transactionHash}`);
+  console.log(`  Block number: ${receipt.blockNumber}`);
+  console.log(`  Gas used: ${receipt.gasUsed.toString()}`);
 }
 
 main()
