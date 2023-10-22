@@ -33,9 +33,9 @@ describe("YourContract", function () {
 
   beforeEach(async function () {
     // Deploy the contract
-    const YourContract = await ethers.getContractFactory("YourContract");
-    yourContract = await YourContract.deploy();
     [owner] = await ethers.getSigners();
+    const YourContract = await ethers.getContractFactory("YourContract");
+    yourContract = await YourContract.deploy(owner.address);
   });
 
   describe("Constructor", function () {
@@ -50,7 +50,8 @@ describe("YourContract", function () {
 
       await expect(yourContract.connect(owner).setDataPoint(dataPoint))
         .to.emit(yourContract, "DataPointChange")
-        .withArgs(owner.address, ethers.utils.id(dataPoint), dataPoint);
+        .withArgs(owner.address, dataPoint);
+      // .withArgs(owner.address, ethers.utils.id(dataPoint), dataPoint);
 
       const totalCounter = await yourContract.totalCounter();
       expect(totalCounter).to.equal(1);
