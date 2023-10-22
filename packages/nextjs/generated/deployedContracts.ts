@@ -5,7 +5,7 @@ const contracts = {
       name: "goerli",
       contracts: {
         YourContract: {
-          address: "0x649aBBFA0e141558B273AF26B9Aee2e014F43aE6",
+          address: "0x5e79a770c714A22fB336b74DA2C2Cc88C0BEe87e",
           abi: [
             {
               inputs: [
@@ -42,6 +42,25 @@ const contracts = {
               ],
               name: "DataPointChange",
               type: "event",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+              ],
+              name: "dataPoints",
+              outputs: [
+                {
+                  internalType: "string",
+                  name: "",
+                  type: "string",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
             },
             {
               inputs: [
@@ -172,6 +191,25 @@ const contracts = {
               type: "function",
             },
             {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_dataCount",
+                  type: "uint256",
+                },
+              ],
+              name: "getSettledData",
+              outputs: [
+                {
+                  internalType: "int256",
+                  name: "",
+                  type: "int256",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
               inputs: [],
               name: "owner",
               outputs: [
@@ -213,6 +251,19 @@ const contracts = {
                   type: "bool",
                 },
               ],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_dataCount",
+                  type: "uint256",
+                },
+              ],
+              name: "settleRequest",
+              outputs: [],
               stateMutability: "nonpayable",
               type: "function",
             },
