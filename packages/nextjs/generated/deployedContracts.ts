@@ -5,7 +5,7 @@ const contracts = {
       name: "goerli",
       contracts: {
         YourContract: {
-          address: "0x6f528d053B6D2db1eCAd7b88e29f91bD3FC098ab",
+          address: "0x649aBBFA0e141558B273AF26B9Aee2e014F43aE6",
           abi: [
             {
               inputs: [
@@ -29,34 +29,143 @@ const contracts = {
                 },
                 {
                   indexed: false,
+                  internalType: "bytes32",
+                  name: "assertionId",
+                  type: "bytes32",
+                },
+                {
+                  indexed: false,
                   internalType: "string",
-                  name: "newGreeting",
+                  name: "newDataPoint",
                   type: "string",
                 },
-                {
-                  indexed: false,
-                  internalType: "bool",
-                  name: "premium",
-                  type: "bool",
-                },
-                {
-                  indexed: false,
-                  internalType: "uint256",
-                  name: "value",
-                  type: "uint256",
-                },
               ],
-              name: "GreetingChange",
+              name: "DataPointChange",
               type: "event",
             },
             {
-              inputs: [],
-              name: "greeting",
+              inputs: [
+                {
+                  internalType: "bytes32",
+                  name: "assertionId",
+                  type: "bytes32",
+                },
+              ],
+              name: "getAssertion",
               outputs: [
                 {
-                  internalType: "string",
+                  components: [
+                    {
+                      components: [
+                        {
+                          internalType: "bool",
+                          name: "arbitrateViaEscalationManager",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "discardOracle",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "validateDisputers",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "address",
+                          name: "assertingCaller",
+                          type: "address",
+                        },
+                        {
+                          internalType: "address",
+                          name: "escalationManager",
+                          type: "address",
+                        },
+                      ],
+                      internalType:
+                        "struct OptimisticOracleV3Interface.EscalationManagerSettings",
+                      name: "escalationManagerSettings",
+                      type: "tuple",
+                    },
+                    {
+                      internalType: "address",
+                      name: "asserter",
+                      type: "address",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "assertionTime",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "bool",
+                      name: "settled",
+                      type: "bool",
+                    },
+                    {
+                      internalType: "contract IERC20",
+                      name: "currency",
+                      type: "address",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "expirationTime",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "bool",
+                      name: "settlementResolution",
+                      type: "bool",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "domainId",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "identifier",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "bond",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "address",
+                      name: "callbackRecipient",
+                      type: "address",
+                    },
+                    {
+                      internalType: "address",
+                      name: "disputer",
+                      type: "address",
+                    },
+                  ],
+                  internalType: "struct OptimisticOracleV3Interface.Assertion",
                   name: "",
-                  type: "string",
+                  type: "tuple",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "bytes32",
+                  name: "assertionId",
+                  type: "bytes32",
+                },
+              ],
+              name: "getAssertionResult",
+              outputs: [
+                {
+                  internalType: "bool",
+                  name: "",
+                  type: "bool",
                 },
               ],
               stateMutability: "view",
@@ -76,8 +185,27 @@ const contracts = {
               type: "function",
             },
             {
-              inputs: [],
-              name: "premium",
+              inputs: [
+                {
+                  internalType: "string",
+                  name: "_dataPoint",
+                  type: "string",
+                },
+              ],
+              name: "setDataPoint",
+              outputs: [],
+              stateMutability: "payable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "bytes32",
+                  name: "assertionId",
+                  type: "bytes32",
+                },
+              ],
+              name: "settleAndGetAssertionResult",
               outputs: [
                 {
                   internalType: "bool",
@@ -85,20 +213,7 @@ const contracts = {
                   type: "bool",
                 },
               ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "string",
-                  name: "_newGreeting",
-                  type: "string",
-                },
-              ],
-              name: "setGreeting",
-              outputs: [],
-              stateMutability: "payable",
+              stateMutability: "nonpayable",
               type: "function",
             },
             {
@@ -122,7 +237,7 @@ const contracts = {
                   type: "address",
                 },
               ],
-              name: "userGreetingCounter",
+              name: "userDataPointCounter",
               outputs: [
                 {
                   internalType: "uint256",
@@ -132,17 +247,6 @@ const contracts = {
               ],
               stateMutability: "view",
               type: "function",
-            },
-            {
-              inputs: [],
-              name: "withdraw",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              stateMutability: "payable",
-              type: "receive",
             },
           ],
         },

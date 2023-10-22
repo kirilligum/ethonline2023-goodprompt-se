@@ -29,7 +29,7 @@ async function main() {
   //   console.log(`  Event: ${event}`);
   // });
 
-  const setDataPointTx = await contract.setDataPoint("sample instruction and response");
+  const setDataPointTx = await contract.setDataPoint("my test: sample instruction and response");
 
   const receipt = await setDataPointTx.wait();
 
@@ -56,3 +56,10 @@ async function main() {
   // });
 
 }
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
