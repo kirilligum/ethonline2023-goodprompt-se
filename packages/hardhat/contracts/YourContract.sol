@@ -10,8 +10,7 @@ import "@uma/core/contracts/optimistic-oracle-v3/interfaces/OptimisticOracleV3In
 contract YourContract {
 	// State Variables
 	address public immutable owner;
-	// string public greeting = "Building Unstoppable Apps!!!";
-	// string public dataPoint = "Building Unstoppable Apps!!!";
+	string public dataPoint = "Creating trusted LLM-teaching data!!!";
 	uint256 public totalCounter = 0;
 	mapping(address => uint256) public userDataPointCounter;
 	mapping(uint256 => string) public dataPoints;
@@ -49,6 +48,7 @@ contract YourContract {
 		);
 
 		dataPoints[totalCounter] = _dataPoint;
+		dataPoint = _dataPoint;
 
 		requestTime = block.timestamp; // Set the request time to the current block time.
 		IERC20 bondCurrency = IERC20(

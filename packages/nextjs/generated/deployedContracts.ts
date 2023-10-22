@@ -5,7 +5,7 @@ const contracts = {
       name: "goerli",
       contracts: {
         YourContract: {
-          address: "0x5e79a770c714A22fB336b74DA2C2Cc88C0BEe87e",
+          address: "0xe4f0df38bB7632e92876FEFafD5FD8Df9cCD4E46",
           abi: [
             {
               inputs: [
@@ -42,6 +42,19 @@ const contracts = {
               ],
               name: "DataPointChange",
               type: "event",
+            },
+            {
+              inputs: [],
+              name: "dataPoint",
+              outputs: [
+                {
+                  internalType: "string",
+                  name: "",
+                  type: "string",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
             },
             {
               inputs: [

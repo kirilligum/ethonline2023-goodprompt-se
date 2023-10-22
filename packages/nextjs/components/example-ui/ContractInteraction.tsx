@@ -8,13 +8,14 @@ import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 export const ContractInteraction = () => {
   const [visible, setVisible] = useState(true);
-  const [newGreeting, setNewGreeting] = useState("");
+  const [newInstruction, setNewInstruction] = useState("");
+  const [newResponse, setNewResponse] = useState("");
 
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "YourContract",
-    functionName: "setGreeting",
-    args: [newGreeting],
-    value: parseEther("0.01"),
+    functionName: "setDataPoint",
+    args: ["<instruction>" + newInstruction + "</instruction>" + "<response>" + newResponse + "</response>"],
+    value: parseEther("0.001"),
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
@@ -31,16 +32,15 @@ export const ContractInteraction = () => {
             <span className="text-3xl">👋🏻</span>
             <div>
               <div>
-                In this page you can see how some of our <strong>hooks & components</strong> work, and how you can bring
-                them to life with your own design! Have fun and try it out!
+                Hi! Please help us to create a dataset for training LLM to make web3 technologis simple to access.
+                Teaching AI is a crucial part of making it smarter and more helpful; it also helps exposing the AI to
+                the new information.
               </div>
-              <div className="mt-2">
-                Check out{" "}
-                <code className="italic bg-base-300 text-base font-bold [word-spacing:-0.5rem]">
-                  packages / nextjs/pages / example-ui.tsx
-                </code>{" "}
-                and its underlying components.
-              </div>
+              <br />
+              <div>Emphasise helpfulness, followed by truthfulness, and harmlessness.</div>
+              <br />
+              <div>If the reviewers approve your submission, you will get paid and your bond will be returned.</div>
+              <div>If the reviewers reject your submission, you loose your bond.</div>
             </div>
           </div>
           <button
@@ -52,37 +52,52 @@ export const ContractInteraction = () => {
         </div>
 
         <div className="flex flex-col mt-6 px-7 py-8 bg-base-200 opacity-80 rounded-2xl shadow-lg border-2 border-primary">
-          <span className="text-4xl sm:text-6xl text-black">Set a Greeting_</span>
-
+          <span className="text-4xl sm:text-6xl text-black">Dataset: brew tees</span>
+          <span className="text-2xl sm:text-4xl text-black">Instruction</span>
           <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-5">
             <input
               type="text"
-              placeholder="Write your greeting here"
-              className="input font-bai-jamjuree w-full px-5 bg-[url('/assets/gradient-bg.png')] bg-[length:100%_100%] border border-primary text-lg sm:text-2xl placeholder-white uppercase"
-              onChange={e => setNewGreeting(e.target.value)}
+              placeholder="Write your instruction here"
+              className="input font-bai-jamjuree w-full px-5 bg-[url('/assets/gradient-bg.png')] bg-[length:100%_100%] border border-primary text-lg sm:text-2xl placeholder-white "
+              onChange={e => setNewInstruction(e.target.value)}
             />
-            <div className="flex rounded-full border border-primary p-1 flex-shrink-0">
-              <div className="flex rounded-full border-2 border-primary p-1">
-                <button
-                  className="btn btn-primary rounded-full capitalize font-normal font-white w-24 flex items-center gap-1 hover:gap-2 transition-all tracking-widest"
-                  onClick={() => writeAsync()}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <span className="loading loading-spinner loading-sm"></span>
-                  ) : (
-                    <>
-                      Send <ArrowSmallRightIcon className="w-3 h-3 mt-0.5" />
-                    </>
-                  )}
-                </button>
-              </div>
+          </div>
+          <span className="text-2xl sm:text-4xl text-black">Response</span>
+          <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-5">
+            <input
+              type="text"
+              placeholder="Write your response here"
+              className="input font-bai-jamjuree w-full px-5 bg-[url('/assets/gradient-bg.png')] bg-[length:100%_100%] border border-primary text-lg sm:text-2xl placeholder-white "
+              onChange={e => setNewResponse(e.target.value)}
+            />
+          </div>
+          <span className="text-1xl sm:text-2xl text-black">Dataset License: APACHE-2</span>
+          <div className="flex flex-shrink-0 justify-end">
+            <div className="flex rounded-full border-2 border-primary p-1">
+              <button
+                className="btn btn-primary rounded-full capitalize font-normal font-white w-48 flex items-center gap-1 hover:gap-2 transition-all tracking-widest"
+                onClick={() => writeAsync()}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <span className="loading loading-spinner loading-sm"></span>
+                ) : (
+                  <>
+                    Submit for review
+                    <ArrowSmallRightIcon className="w-3 h-3 mt-0.5" />
+                  </>
+                )}
+              </button>
             </div>
           </div>
 
           <div className="mt-4 flex gap-2 items-start">
-            <span className="text-sm leading-tight">Price:</span>
-            <div className="badge badge-warning">0.01 ETH + Gas</div>
+            <span className="text-sm leading-tight">Income for this submission:</span>
+            <div className="badge badge-warning">0.0001 ETH</div>
+          </div>
+          <div className="mt-4 flex gap-2 items-start">
+            <span className="text-sm leading-tight">Bond for this submission:</span>
+            <div className="badge badge-warning">0.001 ETH</div>
           </div>
         </div>
       </div>
