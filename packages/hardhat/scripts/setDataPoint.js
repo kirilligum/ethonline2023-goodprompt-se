@@ -23,11 +23,11 @@ async function main() {
 
   const contract = Contract.attach(contractAddress);
 
-  contract.on("DataPointSet", (dataPoint, event) => {
-    console.log("DataPointSet event emitted. Event details are:");
-    console.log(`  Data point: ${dataPoint}`);
-    console.log(`  Event: ${event}`);
-  });
+  // contract.on("DataPointChange", (dataPoint, event) => {
+  //   console.log("DataPointChange event emitted. Event details are:");
+  //   console.log(`  Data point: ${dataPoint}`);
+  //   console.log(`  Event: ${event}`);
+  // });
 
   const setDataPointTx = await contract.setDataPoint("sample instruction and response");
 
@@ -37,11 +37,16 @@ async function main() {
   console.log(`  Transaction hash: ${receipt.transactionHash}`);
   console.log(`  Block number: ${receipt.blockNumber}`);
   console.log(`  Gas used: ${receipt.gasUsed.toString()}`);
-}
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
+  const interface = new ethers.utils.Interface(["event DataPointChange(address indexed greetingSetter, bytes32 assertionId, string newDataPoint)"]);
+
+  const events = receipt.logs.map(log => {
+    const event = interface.parseLog(log);
+    return event;
   });
+
+  events.forEach(event => {
+    console.log("DataPointChange event:", event.args.greetingSetter, event.args.assertionId, event.args.newDataPoint);
+  });
+
+}
