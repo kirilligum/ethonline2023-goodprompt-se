@@ -15,13 +15,13 @@ contract YourContract {
 	mapping(address => uint256) public userDataPointCounter;
 
 	// Events: a way to emit log statements from smart contract that can be listened to by external parties
-	event DataPointChange(address indexed greetingSetter, string newDataPoint);
+	// event DataPointChange(address indexed greetingSetter, string newDataPoint);
 
-	// event DataPointChange(
-	// 	address indexed greetingSetter,
-	// 	bytes32 assertionId,
-	// 	string newDataPoint
-	// );
+	event DataPointChange(
+		address indexed greetingSetter,
+		bytes32 assertionId,
+		string newDataPoint
+	);
 
 	// Constructor: Called once on contract deployment
 	// Check packages/hardhat/deploy/00_deploy_your_contract.ts
@@ -48,12 +48,12 @@ contract YourContract {
 		// Assert the truth against the Optimistic Asserter. This uses the assertion with defaults method which defaults
 		// all values, such as a) challenge window to 120 seconds (2 mins), b) identifier to ASSERT_TRUTH, c) bond currency
 		//  to USDC and c) and default bond size to 0 (which means we dont need to worry about approvals in this example).
-		// bytes32 assertionId = oov3.assertTruthWithDefaults(
-		// 	bytes(_dataPoint),
-		// 	address(this)
-		// );
-		// emit DataPointChange(msg.sender, assertionId, _dataPoint);
-		emit DataPointChange(msg.sender, _dataPoint);
+		bytes32 assertionId = oov3.assertTruthWithDefaults(
+			bytes(_dataPoint),
+			address(this)
+		);
+		emit DataPointChange(msg.sender, assertionId, _dataPoint);
+		// emit DataPointChange(msg.sender, _dataPoint);
 	}
 
 	// Settle the assertion, if it has not been disputed and it has passed the challenge window, and return the result.
