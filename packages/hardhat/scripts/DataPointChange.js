@@ -4,7 +4,7 @@ async function main() {
   const [deployer] = await hre.ethers.getSigners();
 
   console.log(
-    "Listening for DataPointChange events with the account:",
+    "Fetching past DataPointChange events with the account:",
     deployer.address
   );
 
@@ -12,13 +12,18 @@ async function main() {
   const contractAddress = process.env.MY_CONTRACT_ADDRESS;
   const contract = Contract.attach(contractAddress);
 
-  contract.on("DataPointChange", (greetingSetter, assertionId, newDataPoint, event) => {
-    console.log("DataPointChange event emitted. Event details are:");
-    console.log(`  Greeting Setter: ${greetingSetter}`);
-    console.log(`  Assertion ID: ${assertionId}`);
-    console.log(`  New Data Point: ${newDataPoint}`);
-    console.log(`  Event: ${event}`);
+  const filter = contract.filters.DataPointChange();
+  const events = await contract.queryFilter(filter);
+
+  events.forEach((event) => {
+    const { args, blockNumber } = event;
+    console.log(`DataPointChange event found at block number ${blockNumber}`);
+    console.log(`  Greeting Setter: ${args.greetingSetter}`);
+    console.log(`  Assertion ID: ${args.assertionId}`);
+    console.log(`  New Data Point: ${args.newDataPoint}`);
   });
+
+  console.log("Finished fetching past DataPointChange events");
 }
 
 main()
