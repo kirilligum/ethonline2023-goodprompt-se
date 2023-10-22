@@ -23,6 +23,12 @@ async function main() {
 
   const contract = Contract.attach(contractAddress);
 
+  contract.on("DataPointSet", (dataPoint, event) => {
+    console.log("DataPointSet event emitted. Event details are:");
+    console.log(`  Data point: ${dataPoint}`);
+    console.log(`  Event: ${event}`);
+  });
+
   const setDataPointTx = await contract.setDataPoint("sample instruction and response");
 
   const receipt = await setDataPointTx.wait();
