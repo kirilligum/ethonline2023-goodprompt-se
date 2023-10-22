@@ -4,28 +4,21 @@ pragma solidity >=0.8.0 <0.9.0;
 // Useful for debugging. Remove when deploying to a live network.
 import "hardhat/console.sol";
 
-// Use openzeppelin to inherit battle-tested implementations (ERC20, ERC721, etc)
-// import "@openzeppelin/contracts/access/Ownable.sol";
+import "@uma/core/contracts/optimistic-oracle-v3/interfaces/OptimisticOracleV3Interface.sol";
 
-/**
- * A smart contract that allows changing a state variable of the contract and tracking the changes
- * It also allows the owner to withdraw the Ether in the contract
- * @author BuidlGuidl
- */
 contract YourContract {
 	// State Variables
 	address public immutable owner;
-	string public greeting = "Building Unstoppable Apps!!!";
-	bool public premium = false;
+	// string public greeting = "Building Unstoppable Apps!!!";
+	// string public dataPoint = "Building Unstoppable Apps!!!";
 	uint256 public totalCounter = 0;
-	mapping(address => uint) public userGreetingCounter;
+	mapping(address => uint256) public userDataPointCounter;
 
 	// Events: a way to emit log statements from smart contract that can be listened to by external parties
-	event GreetingChange(
+	event DataPointChange(
 		address indexed greetingSetter,
-		string newGreeting,
-		bool premium,
-		uint256 value
+		bytes32 assertionId,
+		string newDataPoint
 	);
 
 	// Constructor: Called once on contract deployment
@@ -34,54 +27,56 @@ contract YourContract {
 		owner = _owner;
 	}
 
-	// Modifier: used to define a set of rules that must be met before or after a function is executed
-	// Check the withdraw() function
-	modifier isOwner() {
-		// msg.sender: predefined variable that represents address of the account that called the current function
-		require(msg.sender == owner, "Not the Owner");
-		_;
-	}
+	// Create an Optimistic Oracle V3 instance at the deployed address on Görli.
+	OptimisticOracleV3Interface oov3 =
+		OptimisticOracleV3Interface(0x9923D42eF695B5dd9911D05Ac944d4cAca3c4EAB);
 
-	/**
-	 * Function that allows anyone to change the state variable "greeting" of the contract and increase the counters
-	 *
-	 * @param _newGreeting (string memory) - new greeting to save on the contract
-	 */
-	function setGreeting(string memory _newGreeting) public payable {
+	function setDataPoint(string memory _dataPoint) public payable {
 		// Print data to the hardhat chain console. Remove when deploying to a live network.
 		console.log(
-			"Setting new greeting '%s' from %s",
-			_newGreeting,
+			"Setting new dataPoint '%s' from %s",
+			_dataPoint,
 			msg.sender
 		);
 
-		// Change state variables
-		greeting = _newGreeting;
 		totalCounter += 1;
-		userGreetingCounter[msg.sender] += 1;
+		userDataPointCounter[msg.sender] += 1;
 
-		// msg.value: built-in global variable that represents the amount of ether sent with the transaction
-		if (msg.value > 0) {
-			premium = true;
-		} else {
-			premium = false;
-		}
-
-		// emit: keyword used to trigger an event
-		emit GreetingChange(msg.sender, _newGreeting, msg.value > 0, 0);
+		// Each assertion has an associated assertionID that uniquly identifies the assertion. We will store this here.
+		// Assert the truth against the Optimistic Asserter. This uses the assertion with defaults method which defaults
+		// all values, such as a) challenge window to 120 seconds (2 mins), b) identifier to ASSERT_TRUTH, c) bond currency
+		//  to USDC and c) and default bond size to 0 (which means we dont need to worry about approvals in this example).
+		bytes32 assertionId = oov3.assertTruthWithDefaults(
+			bytes(_dataPoint),
+			address(this)
+		);
+		emit DataPointChange(msg.sender, assertionId, _dataPoint);
 	}
 
-	/**
-	 * Function that allows the owner to withdraw all the Ether in the contract
-	 * The function can only be called by the owner of the contract as defined by the isOwner modifier
-	 */
-	function withdraw() public isOwner {
-		(bool success, ) = owner.call{ value: address(this).balance }("");
-		require(success, "Failed to send Ether");
+	// Settle the assertion, if it has not been disputed and it has passed the challenge window, and return the result.
+	// result
+	function settleAndGetAssertionResult(bytes32 assertionId)
+		public
+		returns (bool)
+	{
+		return oov3.settleAndGetAssertionResult(assertionId);
 	}
 
-	/**
-	 * Function that allows the contract to receive ETH
-	 */
-	receive() external payable {}
+	// Just return the assertion result. Can only be called once the assertion has been settled.
+	function getAssertionResult(bytes32 assertionId)
+		public
+		view
+		returns (bool)
+	{
+		return oov3.getAssertionResult(assertionId);
+	}
+
+	// Return the full assertion object contain all information associated with the assertion. Can be called any time.
+	function getAssertion(bytes32 assertionId)
+		public
+		view
+		returns (OptimisticOracleV3Interface.Assertion memory)
+	{
+		return oov3.getAssertion(assertionId);
+	}
 }
