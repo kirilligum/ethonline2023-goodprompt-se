@@ -16,12 +16,10 @@ async function main() {
   const events = await contract.queryFilter(filter);
 
   events.forEach((event) => {
-    const { args, blockNumber, transactionHash, gasPrice, address, status } = event;
+    const { args, blockNumber, transactionHash, address } = event;
     console.log(`DataPointChange event found at block number ${blockNumber}`);
     console.log(`  Transaction hash: ${transactionHash}`);
-    console.log(`  Gas price: ${gasPrice}`);
     console.log(`  Contract address: ${address}`);
-    console.log(`  Transaction status: ${status}`);
     console.log(`  Greeting Setter: ${args.greetingSetter}`);
     console.log(`  Assertion ID: ${args.assertionId}`);
     console.log(`  New Data Point: ${args.newDataPoint}`);
